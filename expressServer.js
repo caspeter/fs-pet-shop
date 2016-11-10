@@ -21,6 +21,21 @@ app.get('/pets', function (req, res) {
   });
 });
 
+app.get('/pets/:index', function (req, res) {
+  fs.readFile(petsPath, 'utf8', function (err, data) {
+    if(err){
+      console.error(err.stack);
+      return res.sendStatus(500);
+    };
+    var index = parseInt(req.params.index);
+    var pets = JSON.parse(data);
+    if (index > pets.length-1 || index < 0 || Number.isNaN(index)) {
+      return res.sendStatus(404);
+    }
+    res.send(pets[index]);
+  });
+});
+
 app.use(function(req, res){
   res.sendStatus(404);
 });
