@@ -93,9 +93,9 @@ app.post('/pets', function(req, res, next) {
 // ----PUT----
 
 app.put('/pets/:index', function(req, res, next) {
-    fs.readFile(petsPath, 'utf8', function(err, data, next) {
+    fs.readFile(petsPath, 'utf8', function(err, data) {
         if (err) {
-            return next(err)
+            return next(err);
         };
         var pets = JSON.parse(data);
         var index = Number.parseInt(req.params.index);
@@ -103,10 +103,7 @@ app.put('/pets/:index', function(req, res, next) {
             return res.sendStatus(404);
         };
         var body = req.body;
-        if (body.age || body.kind || body.name) {
-            if (err) {
-              return next(err);
-            };
+        if (body.age && body.kind && body.name) {
             pets[index] = body;
             var petsJSON = JSON.stringify(pets)
             fs.writeFile(petsPath, petsJSON, function(writeErr) {
@@ -117,7 +114,7 @@ app.put('/pets/:index', function(req, res, next) {
             // console.log(body);
             return res.send(body);
         } else {
-            return res.send(400);
+            return res.sendStatus(400);
         };
     });
     // console.log('code that will allow us to change a certain index');
@@ -170,8 +167,8 @@ app.patch('/pets/:index', function(req, res, next) {
             if (writeErr) {
                 throw writeErr;
             };
+            res.send(pets[index]);
         });
-        res.send(pets[index]);
     });
 })
 
